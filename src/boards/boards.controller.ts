@@ -7,15 +7,16 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UsePipes,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { StatusPipe } from './pipes/remove-status-validiation.pipe';
 
 @Controller('boards')
+@UseGuards(AuthGuard())
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
@@ -25,7 +26,7 @@ export class BoardsController {
   }
 
   @Post('/')
-  createBoard(@Body(new StatusPipe()) createBoardDto: CreateBoardDto) {
+  createBoard(@Body(StatusPipe) createBoardDto: CreateBoardDto) {
     return this.boardsService.createBoard(createBoardDto);
   }
 
